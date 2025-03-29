@@ -95,7 +95,6 @@ json
 bash
 git init
 git add .
-git commit -m "גרסה ראשונית של שרת התמלול"
 git remote add origin https://github.com/yarivtch/hebrew_transcription_f_w_service-.git
 git push -u origin main
 
@@ -134,6 +133,27 @@ git push -u origin main
 
 2. הגדל את גודל הקובץ המקסימלי:
    - הוסף משתנה סביבה `MAX_UPLOAD_SIZE` עם ערך בבייטים (למשל 100000000 עבור 100MB)
+
+#### שגיאת זיכרון ב-Render
+
+אם אתה נתקל בשגיאה `Ran out of memory (used over 512MB)` בעת פריסה ב-Render:
+
+1. **שדרג לתוכנית בתשלום**:
+   - לחץ על "Change Plan" בפרויקט שלך
+   - בחר בתוכנית Standard (2GB RAM) או גבוהה יותר
+
+2. **או השתמש במודל קטן יותר**:
+   - שנה את משתנה הסביבה `WHISPER_MODEL_SIZE` ל-`tiny` או `base`
+   - עדכן את קובץ `transcription/transcriber.py` להשתמש בפרמטרים חסכוניים בזיכרון:
+     ```python
+     model = WhisperModel(
+         MODEL_SIZE, 
+         device="cpu",
+         compute_type="int8"
+     )
+     ```
+
+3. **הגבל את גודל הקבצים** שניתן להעלות לשירות
 
 ## תקשורת בין קליינט לשרת
 

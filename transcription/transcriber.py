@@ -14,9 +14,14 @@ logger = logging.getLogger(__name__)
 DEFAULT_MODEL = "ivrit-ai/faster-whisper-v2-d4"
 MODEL_SIZE = os.getenv("WHISPER_MODEL_SIZE", DEFAULT_MODEL)
 
-# טעינת המודל (יטען רק פעם אחת כשהמודול מיובא)
+# טעינת המודל עם פרמטרים לחיסכון בזיכרון
 logger.info(f"טוען מודל תמלול: {MODEL_SIZE}")
-model = WhisperModel(MODEL_SIZE, device="cuda" if os.getenv("USE_GPU", "false").lower() == "true" else "cpu")
+model = WhisperModel(
+    MODEL_SIZE, 
+    device="cuda" if os.getenv("USE_GPU", "false").lower() == "true" else "cpu",
+    compute_type="int8",  # שימוש בדיוק נמוך יותר לחיסכון בזיכרון
+    download_root=os.path.join(os.path.dirname(__file__), "../models")  # שמירת המודל בתיקייה ספציפית
+)
 
 class TranscriptionSegment(BaseModel):
     start: float
