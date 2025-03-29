@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: hebrew-transcription-service
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    plan: standard
+    autoDeploy: false
+    envVars:
+      - key: WHISPER_MODEL_SIZE
+        value: ivrit-ai/faster-whisper-v2-d4
+      - key: USE_GPU
+        value: false
+      - key: ALLOWED_ORIGINS
+        value: "*"
+    disk:
+      name: transcription-data
+      mountPath: /tmp
+      sizeGB: 10 
